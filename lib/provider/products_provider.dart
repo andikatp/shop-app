@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/models/product_model.dart';
+import 'package:shop_app/provider/product_model.dart';
 
 class ProductsProvider with ChangeNotifier {
   final List<ProductModel> _items = [
@@ -37,8 +37,17 @@ class ProductsProvider with ChangeNotifier {
     ),
   ];
 
+  // bool _showFavOnly = false;
+
   List<ProductModel> get items {
+    // if (_showFavOnly) {
+    //   return _items.where((element) => element.isFavorite).toList();
+    // }
     return [..._items];
+  }
+
+  List<ProductModel> get favItems {
+    return _items.where((element) => element.isFavorite).toList();
   }
 
   ProductModel findById(String id) {
@@ -49,4 +58,14 @@ class ProductsProvider with ChangeNotifier {
     // _items.add(value);
     notifyListeners();
   }
+
+  // void showFavOnly() {
+  //   _showFavOnly = true;
+  //   notifyListeners();
+  // }
+
+  // void showAll() {
+  //   _showFavOnly = false;
+  //   notifyListeners();
+  // }
 }
