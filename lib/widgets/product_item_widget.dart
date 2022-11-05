@@ -5,6 +5,8 @@ import 'package:shop_app/provider/product_model.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
 class ProductItemWidget extends StatelessWidget {
+  const ProductItemWidget({super.key});
+
   // const ProductItemWidget(
   //     {super.key,
   //     required this.id,
@@ -19,7 +21,7 @@ class ProductItemWidget extends StatelessWidget {
     final providerProduct = Provider.of<ProductModel>(context, listen: false);
     final providerCart = Provider.of<Cart>(context, listen: false);
     String title = providerProduct.title;
-    String id = providerProduct.id as String;
+    String id = providerProduct.id;
     String imageUrl = providerProduct.imageUrl;
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),

@@ -1,6 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shop_app/provider/product_model.dart';
 
 class ProductsProvider with ChangeNotifier {
@@ -58,6 +59,18 @@ class ProductsProvider with ChangeNotifier {
 
   void addProduct(ProductModel product) {
     // _items.add(value);
+    final url = Uri.parse(
+        'https://shop-app-b5606-default-rtdb.asia-southeast1.firebasedatabase.app/shop%20app/prods.json');
+    http.post(
+      url,
+      body: json.encode({
+        'title': product.title,
+        'description': product.description,
+        'imageUrl': product.imageUrl,
+        'price': product.price,
+        'isFavorite': product.isFavorite,
+      }),
+    );
     final newProduct = ProductModel(
         id: DateTime.now().toString(),
         title: product.title,
