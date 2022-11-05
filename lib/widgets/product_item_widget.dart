@@ -19,7 +19,7 @@ class ProductItemWidget extends StatelessWidget {
     final providerProduct = Provider.of<ProductModel>(context, listen: false);
     final providerCart = Provider.of<Cart>(context, listen: false);
     String title = providerProduct.title;
-    String id = providerProduct.id;
+    String id = providerProduct.id as String;
     String imageUrl = providerProduct.imageUrl;
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
@@ -43,6 +43,18 @@ class ProductItemWidget extends StatelessWidget {
           trailing: IconButton(
             onPressed: () {
               providerCart.addItem(id, providerProduct.price, title);
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: const Text(
+                  'Item added to the cart!',
+                ),
+                duration: const Duration(seconds: 1),
+                action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {
+                      providerCart.removeSingleItem(id);
+                    }),
+              ));
             },
             icon: Icon(
               Icons.shopping_cart,
@@ -63,10 +75,10 @@ class ProductItemWidget extends StatelessWidget {
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return SizedBox(
-                  height: 400,
-                  width: double.infinity,
-                  child: Text(error.toString()),
-                );
+                height: 400,
+                width: double.infinity,
+                child: Text(error.toString()),
+              );
             },
           ),
         ),

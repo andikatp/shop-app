@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:shop_app/provider/product_model.dart';
 
@@ -54,8 +56,17 @@ class ProductsProvider with ChangeNotifier {
     return items.firstWhere((element) => element.id == id);
   }
 
-  void addProduct() {
+  void addProduct(ProductModel product) {
     // _items.add(value);
+    final newProduct = ProductModel(
+        id: DateTime.now().toString(),
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl);
+    _items.add(newProduct);
+    // _items.insert(0, newProduct); // klo mau y pling terlama dibkin gni
+
     notifyListeners();
   }
 
@@ -68,4 +79,19 @@ class ProductsProvider with ChangeNotifier {
   //   _showFavOnly = false;
   //   notifyListeners();
   // }
+
+  void updateProduct(String id, ProductModel newProduct) {
+    final prodIndex = _items.indexWhere((element) => element.id == id);
+    if (prodIndex >= 0) {
+      _items[prodIndex] = newProduct;
+      notifyListeners();
+    } else {
+      log('...');
+    }
+  }
+
+  void deleteProduct(String id) {
+    _items.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
 }
