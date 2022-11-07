@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/provider/products_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/widgets/app_drawer.dart';
 import 'package:shop_app/widgets/badge.dart';
@@ -12,6 +13,9 @@ enum FilterOption {
   all,
 }
 
+bool _isInit = true;
+bool _isLoading = false;
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
   static const routeName = '/main-screen';
@@ -21,6 +25,22 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<ProductsProvider>(context).fetchAndSetProduct().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   bool _isFavorite = false;
   @override
   Widget build(BuildContext context) {
@@ -66,7 +86,9 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: ProductGrid(_isFavorite),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ProductGrid(_isFavorite),
     );
   }
 }
