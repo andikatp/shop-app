@@ -8,20 +8,51 @@ class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
   static const routeName = '/Order-Screen';
 
+  final bool _isLoading = false;
+
+  //   void initState() {
+  //   // Future.delayed(Duration.zero).then((value) async {
+  //   //   setState(() {
+  //   //     _isLoading = true;
+  //   //   });
+  //   //   await Provider.of<Orders>(context, listen: false).fetchAndSet();
+  //   //   setState(() {
+  //   //     _isLoading = false;
+  //   //   });
+  //   // });
+
+  //   super.initState();
+  // }
+
   @override
   Widget build(BuildContext context) {
-    final orderData = Provider.of<Orders>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Orders'),
       ),
       drawer: const AppDrawer(),
-      body: ListView.builder(
-        itemCount: orderData.orders.length,
-        itemBuilder: (context, index) {
-          return OrderItem(
-            order: orderData.orders[index],
-          );
+      body: FutureBuilder(
+        future: Provider.of<Orders>(context, listen: false).fetchAndSet(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.error != null) {
+            //error handling
+            return const Center(child: Text('An error has occured'));
+          } else {
+            return Consumer<Orders>(
+              builder: (context, value, child) {
+                return ListView.builder(
+                  itemCount: value.orders.length,
+                  itemBuilder: (context, index) {
+                    return OrderItem(
+                      order: value.orders[index],
+                    );
+                  },
+                );
+              },
+            );
+          }
         },
       ),
     );

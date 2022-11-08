@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/provider/product_model.dart';
@@ -62,7 +63,11 @@ class ProductsProvider with ChangeNotifier {
   Future<void> fetchAndSetProduct() async {
     try {
       http.Response response = await http.get(url);
-      Map<String, dynamic> data = jsonDecode(response.body);
+      Map<String, dynamic>? data =
+          jsonDecode(response.body) as Map<String, dynamic>?;
+      if (data == null) {
+        return;
+      }
       final List<ProductModel> loadedProduct = [];
       data.forEach((prodId, prodData) {
         loadedProduct.add(ProductModel(
@@ -141,14 +146,19 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-     final url = Uri.parse(
+    final url = Uri.parse(
         'https://shop-app-b5606-default-rtdb.asia-southeast1.firebasedatabase.app/shop%20app/prods/$id.json');
-     try{
-      await http.delete(url);
-    _items.removeWhere((element) => element.id == id);
+    final int existingProductIndex =
+        _items.indexWhere((element) => element.id == id);
+    ProductModel? existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
     notifyListeners();
-     }    catch(error){
-      rethrow;
-     }
+    final http.Response response = await http.delete(url);
+    if (response.statusCode != 200) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw const HttpException('Could not delete product!');
+    }
+    existingProduct = null;
   }
 }
