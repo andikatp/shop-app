@@ -8,7 +8,7 @@ class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
   static const routeName = '/Order-Screen';
 
-  final bool _isLoading = false;
+  // final bool _isLoading = false;
 
   //   void initState() {
   //   // Future.delayed(Duration.zero).then((value) async {
