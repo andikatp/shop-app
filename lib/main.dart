@@ -11,6 +11,7 @@ import 'package:shop_app/screens/edit_product_screen.dart';
 import 'package:shop_app/screens/main_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
+import 'package:shop_app/screens/splash_screen.dart';
 import 'package:shop_app/screens/user_products_screen.dart';
 
 void main() {
@@ -28,9 +29,9 @@ class MyApp extends StatelessWidget {
           create: (context) => Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, ProductsProvider>(
-          create: (context) => ProductsProvider('', '', []),
-          update: (ctx, value, previous) => ProductsProvider(value.token!,
-              value.userId!, previous == null ? [] : previous.items),
+          create: (ctx) => ProductsProvider('', '', []),
+          update: (ctx, value, previous) => ProductsProvider(value.token,
+              value.userId, previous == null ? [] : previous.items),
           // value: ProductsProvider(),
         ),
         ChangeNotifierProvider(
@@ -38,9 +39,9 @@ class MyApp extends StatelessWidget {
           create: (context) => Cart(),
         ),
         ChangeNotifierProxyProvider<Auth, Orders>(
-          create: (context) => Orders('', []),
-          update: (context, value, previous) =>
-              Orders(value.token!, previous == null ? [] : previous.orders),
+          create: (context) => Orders('', '', []),
+          update: (context, value, previous) => Orders(value.token,
+              value.userId, previous == null ? [] : previous.orders),
         ),
         // value: ProductsProvider(),
       ],
@@ -55,7 +56,15 @@ class MyApp extends StatelessWidget {
                   ),
               fontFamily: GoogleFonts.archivo().fontFamily,
             ),
-            home: value.isAuth ? const MainScreen() : const AuthScreen(),
+            home: value.isAuth
+                ? const MainScreen()
+                : FutureBuilder(
+                    future: value.tryAutoLogin(),
+                    builder: (ctx, snapshot) =>
+                        snapshot.connectionState == ConnectionState.waiting
+                            ? const SplashScreen()
+                            : const AuthScreen(),
+                  ),
             routes: {
               MainScreen.routeName: (context) => const MainScreen(),
               ProductDetailScreen.routeName: (context) =>

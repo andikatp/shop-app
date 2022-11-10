@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:shop_app/provider/product_model.dart';
 
 class ProductsProvider with ChangeNotifier {
-  final String authToken;
-  final String userId;
+  final String? authToken;
+  final String? userId;
   ProductsProvider(this.authToken, this.userId, this._items);
 
   List<ProductModel> _items = [
@@ -62,9 +62,11 @@ class ProductsProvider with ChangeNotifier {
     return items.firstWhere((element) => element.id == id);
   }
 
-  Future<void> fetchAndSetProduct() async {
+  Future<void> fetchAndSetProduct([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     final url = Uri.parse(
-        'https://shop-app-b5606-default-rtdb.asia-southeast1.firebasedatabase.app/shop%20app/prods.json?auth=$authToken');
+        'https://shop-app-b5606-default-rtdb.asia-southeast1.firebasedatabase.app/shop%20app/prods.json?auth=$authToken&$filterString');
     try {
       http.Response response = await http.get(url);
       Map<String, dynamic>? data =
@@ -84,7 +86,7 @@ class ProductsProvider with ChangeNotifier {
             price: prodData['price'],
             imageUrl: prodData['imageUrl'],
             isFavorite:
-                favoriteData == null ? false : favoriteData[userId] ?? false));
+                favoriteData == null ? false : favoriteData[prodId] ?? false));
       });
       _items = loadedProduct;
       notifyListeners();
@@ -105,6 +107,7 @@ class ProductsProvider with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
+          'creatorId': userId,
         }),
       );
       final newProduct = ProductModel(

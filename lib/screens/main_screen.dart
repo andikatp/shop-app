@@ -13,9 +13,6 @@ enum FilterOption {
   all,
 }
 
-bool _isInit = true;
-bool _isLoading = false;
-
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
   static const routeName = '/main-screen';
@@ -25,6 +22,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  bool _isInit = true;
+  bool _isLoading = false;
+
   @override
   void didChangeDependencies() {
     if (_isInit) {

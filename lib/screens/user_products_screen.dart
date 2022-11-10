@@ -11,12 +11,12 @@ class UserProductScreen extends StatelessWidget {
 
   Future<void> _refresh(BuildContext context) async {
     await Provider.of<ProductsProvider>(context, listen: false)
-        .fetchAndSetProduct();
+        .fetchAndSetProduct(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<ProductsProvider>(context);
+    // final product = Provider.of<ProductsProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Product'),
@@ -30,25 +30,37 @@ class UserProductScreen extends StatelessWidget {
         ],
       ),
       drawer: const AppDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () => _refresh(context),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: ListView.separated(
-            separatorBuilder: (context, index) => const Divider(
-              height: 1,
-              thickness: 1,
-            ),
-            itemCount: product.items.length,
-            itemBuilder: (_, index) {
-              return UserProductItem(
-                id: product.items[index].id,
-                title: product.items[index].title,
-                imageUrl: product.items[index].imageUrl,
-              );
-            },
-          ),
-        ),
+      body: FutureBuilder(
+        future: _refresh(context),
+        builder: (ctx, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () => _refresh(context),
+                    child: Consumer<ProductsProvider>(
+                      builder: (context, product, child) {
+                        return Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: ListView.separated(
+                            separatorBuilder: (context, index) => const Divider(
+                              height: 1,
+                              thickness: 1,
+                            ),
+                            itemCount: product.items.length,
+                            itemBuilder: (_, index) {
+                              return UserProductItem(
+                                id: product.items[index].id,
+                                title: product.items[index].title,
+                                imageUrl: product.items[index].imageUrl,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
       ),
     );
   }
