@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/helpers/custom_route.dart';
 import 'package:shop_app/provider/auth.dart';
 import 'package:shop_app/provider/cart.dart';
 import 'package:shop_app/provider/orders.dart';
@@ -50,12 +51,14 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-              colorScheme: Theme.of(context).colorScheme.copyWith(
-                    primary: Colors.purple,
-                    secondary: Colors.deepOrange,
-                  ),
-              fontFamily: GoogleFonts.archivo().fontFamily,
-            ),
+                colorScheme: Theme.of(context).colorScheme.copyWith(
+                      primary: Colors.purple,
+                      secondary: Colors.deepOrange,
+                    ),
+                fontFamily: GoogleFonts.archivo().fontFamily,
+                pageTransitionsTheme: PageTransitionsTheme(builders: {
+                  TargetPlatform.android: CustomPageTransitionBuilder(),
+                })),
             home: value.isAuth
                 ? const MainScreen()
                 : FutureBuilder(

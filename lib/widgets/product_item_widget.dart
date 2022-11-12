@@ -77,16 +77,24 @@ class ProductItemWidget extends StatelessWidget {
               arguments: id,
             );
           },
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return SizedBox(
-                height: 400,
-                width: double.infinity,
-                child: Text(error.toString()),
-              );
-            },
+          child: Hero(
+            tag: id,
+            child: FadeInImage(
+              placeholder: const AssetImage('assets/product-placeholder.png'),
+              image: NetworkImage(imageUrl),
+              fit: BoxFit.cover,
+              // child: Image.network(
+              //   imageUrl,
+              //   fit: BoxFit.cover,
+              //   errorBuilder: (context, error, stackTrace) {
+              //     return SizedBox(
+              //       height: 400,
+              //       width: double.infinity,
+              //       child: Text(error.toString()),
+              //     );
+              //   },
+              // ),
+            ),
           ),
         ),
       ),
