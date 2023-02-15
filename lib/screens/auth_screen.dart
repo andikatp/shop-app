@@ -90,10 +90,10 @@ class AuthCard extends StatefulWidget {
   const AuthCard({super.key});
 
   @override
-  _AuthCardState createState() => _AuthCardState();
+  AuthCardState createState() => AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard>
+class AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.login;

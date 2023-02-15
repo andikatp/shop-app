@@ -7,7 +7,7 @@ class CustomRoute<T> extends MaterialPageRoute<T> {
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    // TODO: implement buildTransitions
+  
     if (settings.name == '/') {
       return child;
     }
@@ -27,7 +27,7 @@ class CustomPageTransitionBuilder extends PageTransitionsBuilder {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    // TODO: implement buildTransitions
+  
     if (route.settings.name == '/') {
       return child;
     }
