@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/orders.dart';
+import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/widgets/cart_item_widget.dart';
 import '../provider/cart.dart' show Cart;
 
@@ -77,6 +78,10 @@ class _OrderButtonState extends State<OrderButton> {
   bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
+    void goCart() {
+      Navigator.pushNamed(context, OrdersScreen.routeName);
+    }
+
     return TextButton(
       onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
           ? null
@@ -90,6 +95,7 @@ class _OrderButtonState extends State<OrderButton> {
               setState(() {
                 _isLoading = false;
               });
+              goCart();
             },
       child: _isLoading
           ? const CircularProgressIndicator()

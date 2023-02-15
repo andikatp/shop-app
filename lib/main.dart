@@ -7,15 +7,23 @@ import 'package:shop_app/provider/cart.dart';
 import 'package:shop_app/provider/orders.dart';
 import 'package:shop_app/provider/products_provider.dart';
 import 'package:shop_app/screens/auth_screen.dart';
+import 'package:shop_app/screens/bottom_navbar_screen.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
 import 'package:shop_app/screens/main_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
+import 'package:shop_app/screens/profile_screen.dart';
+import 'package:shop_app/screens/qr_scan_screen.dart';
 import 'package:shop_app/screens/splash_screen.dart';
 import 'package:shop_app/screens/user_products_screen.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  const SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top]);
   runApp(const MyApp());
 }
 
@@ -52,7 +60,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
                 colorScheme: Theme.of(context).colorScheme.copyWith(
-                      primary: Colors.purple,
+                      primary: Colors.purple.shade200,
                       secondary: Colors.deepOrange,
                     ),
                 fontFamily: GoogleFonts.archivo().fontFamily,
@@ -60,7 +68,7 @@ class MyApp extends StatelessWidget {
                   TargetPlatform.android: CustomPageTransitionBuilder(),
                 })),
             home: value.isAuth
-                ? const MainScreen()
+                ? const BottomNavBarScreen()
                 : FutureBuilder(
                     future: value.tryAutoLogin(),
                     builder: (ctx, snapshot) =>
@@ -79,6 +87,10 @@ class MyApp extends StatelessWidget {
               EditProductScreen.routeName: (context) =>
                   const EditProductScreen(),
               AuthScreen.routeName: (context) => const AuthScreen(),
+              ProfileScreen.routeName: (context) => const ProfileScreen(),
+              BottomNavBarScreen.routeName: (context) =>
+                  const BottomNavBarScreen(),
+              QrScanScreen.routeName: (context) => const QrScanScreen(),
             },
           );
         },

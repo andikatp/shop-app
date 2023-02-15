@@ -42,6 +42,8 @@ dependencies:
   http: ^0.13.5
   firebase_core: ^2.1.1
   shared_preferences: ^2.0.15
+  mobile_scanner: ^3.0.0
+  scaffold_gradient_background: ^1.0.3+1
 
 dev_dependencies:
   flutter_test:

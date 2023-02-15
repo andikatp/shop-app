@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/provider/product_model.dart';
 import 'package:shop_app/provider/products_provider.dart';
+import 'package:shop_app/screens/bottom_navbar_screen.dart';
+import 'package:shop_app/screens/main_screen.dart';
 
 class EditProductScreen extends StatefulWidget {
   const EditProductScreen({super.key});
@@ -170,7 +172,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         setState(() {
           _isLoading = false;
         });
-        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(MainScreen.routeName);
       }
     } else {
       try {
@@ -198,7 +200,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         setState(() {
           _isLoading = false;
         });
-        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(BottomNavBarScreen.routeName);
       }
     }
   }
